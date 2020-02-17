@@ -53,23 +53,10 @@ namespace CableRobot.Fins
         /// <param name="startAddress">Address to start to read from</param>
         /// <param name="count">Number of ushorts to read</param>
         /// <returns>Read data</returns>
-        public ushort[] ReadData(ushort startAddress, ushort count)
+        public ushort[] ReadData(FinsAddress startAddress, ushort count)
         {
             var sid = IncrementSid();
-            var cmd = FinsDriver.ReadDataCommand(new Header(sid, true), startAddress, count);
-            return Read(sid, cmd);
-        }
-
-        /// <summary>
-        /// Syncroniously reads specified number of ushorts starting from specified address in work memory
-        /// </summary>
-        /// <param name="startAddress">Address to start to read from</param>
-        /// <param name="count">Number of ushorts to read</param>
-        /// <returns>Read data</returns>
-        public ushort[] ReadWork(ushort startAddress, ushort count)
-        {
-            var sid = IncrementSid();
-            var cmd = FinsDriver.ReadWorkCommand(new Header(sid, true), startAddress, count);
+            var cmd = FinsDriver.ReadCommand(startAddress, new Header(sid, true), count);
             return Read(sid, cmd);
         }
 
@@ -78,22 +65,10 @@ namespace CableRobot.Fins
         /// </summary>
         /// <param name="startAddress">Address to start write to</param>
         /// <param name="data">Data to write</param>
-        public void WriteData(ushort startAddress, ushort[] data)
+        public void WriteData(FinsAddress startAddress, ushort[] data)
         {
             var sid = IncrementSid();
-            var cmd = FinsDriver.WriteDataCommand(new Header(sid, true), startAddress, data);
-            Write(sid, cmd);
-        }
-
-        /// <summary>
-        /// Syncroniously writes specified data to specified address of work memory
-        /// </summary>
-        /// <param name="startAddress">Address to start write to</param>
-        /// <param name="data">Data to write</param>
-        public void WriteWork(ushort startAddress, ushort[] data)
-        {
-            var sid = IncrementSid();
-            var cmd = FinsDriver.WriteWorkCommand(new Header(sid, true), startAddress, data);
+            var cmd = FinsDriver.WriteCommand(startAddress, new Header(sid, true), data);
             Write(sid, cmd);
         }
 
@@ -103,10 +78,10 @@ namespace CableRobot.Fins
         /// <param name="startAddress">Address to start to read from</param>
         /// <param name="count">Number of ushorts to read</param>
         /// <returns>Read data</returns>
-        public async Task<ushort[]> ReadDataAsync(ushort startAddress, ushort count)
+        public async Task<ushort[]> ReadAsync(FinsAddress startAddress, ushort count)
         {
             var sid = IncrementSid();
-            var cmd = FinsDriver.ReadDataCommand(new Header(sid, true), startAddress, count);
+            var cmd = FinsDriver.ReadCommand(startAddress, new Header(sid, true), count);
             return (await CommandAsync(sid, cmd)).Data;
         }
 
@@ -115,10 +90,10 @@ namespace CableRobot.Fins
         /// </summary>
         /// <param name="startAddress">Address to start to write to</param>
         /// <param name="data">Data to write</param>
-        public async Task WriteDataAsync(ushort startAddress, ushort[] data)
+        public async Task WriteAsync(FinsAddress startAddress, ushort[] data)
         {
             var sid = IncrementSid();
-            var cmd = FinsDriver.WriteDataCommand(new Header(sid, true), startAddress, data);
+            var cmd = FinsDriver.WriteCommand(startAddress, new Header(sid, true), data);
             await CommandAsync(sid, cmd);
         }
 
@@ -127,10 +102,10 @@ namespace CableRobot.Fins
         /// </summary>
         /// <param name="startAddress">Address to start to read from</param>
         /// <param name="count">Number of ushorts to read</param>
-        public void WriteDataNoResponse(ushort startAddress, ushort[] data)
+        public void WriteNoResponse(FinsAddress startAddress, ushort[] data)
         {
             var sid = IncrementSid();
-            var cmd = FinsDriver.WriteDataCommand(new Header(sid, false), startAddress, data);
+            var cmd = FinsDriver.WriteCommand(startAddress, new Header(sid, false), data);
             _udpClient.SendAsync(cmd, cmd.Length);
         }
         

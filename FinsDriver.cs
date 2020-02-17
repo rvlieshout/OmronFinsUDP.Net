@@ -6,21 +6,9 @@ namespace CableRobot.Fins
 {
     internal static class FinsDriver
     {
-        private const byte MemoryAreaData = 0x82;
-        private const byte MemoryAreaWork = 0xB1;
         private static readonly byte[] CommandMemoryAreaRead = new byte[] {0x01, 0x01};
         private static readonly byte[] CommandMemoryAreaWrite = new byte[] {0x01, 0x02};
 
-        public static byte[] ReadDataCommand(Header header, ushort startAddress, ushort readCount)
-            => ReadCommand(MemoryAreaData, header, startAddress, readCount);
-        public static byte[] ReadWorkCommand(Header header, ushort startAddress, ushort readCount)
-            => ReadCommand(MemoryAreaWork, header, startAddress, readCount);
-
-        public static byte[] WriteDataCommand(Header header, ushort startAddress, ushort[] data)
-            => WriteCommand(MemoryAreaData, header, startAddress, data);
-        public static byte[] WriteWorkCommand(Header header, ushort startAddress, ushort[] data)
-            => WriteCommand(MemoryAreaWork, header, startAddress, data);
-        
         public static void ProcessResponse(UdpReceiveResult received, FinsResponse[] responses)
         {
             var data = received.Buffer;
@@ -34,28 +22,28 @@ namespace CableRobot.Fins
             responses[sid].PutValue(sid, ToShorts(data.Skip(14).ToArray()));
         }
         
-        private static byte[] ReadCommand(byte memoryArea, Header header, ushort startAddress, ushort readCount)
+        public static byte[] ReadCommand(FinsAddress memoryAddress, Header header, ushort readCount)
         {
             var ms = new BinaryWriter(new MemoryStream());
             header.WriteTo(ms);
             ms.Write(CommandMemoryAreaRead);
-            ms.Write(memoryArea);
-            ms.Write((byte)(startAddress >> 8));
-            ms.Write((byte)startAddress);
+            ms.Write(memoryAddress.Area);
+            ms.Write((byte)(memoryAddress.Offset >> 8));
+            ms.Write((byte)memoryAddress.Offset);
             ms.Write((byte)0); // Address Bit
             ms.Write((byte)(readCount >> 8));
             ms.Write((byte)readCount);
             return ((MemoryStream) ms.BaseStream).ToArray();
         }
 
-        private static byte[] WriteCommand(byte memoryArea, Header header, ushort startAddress, ushort[] data)
+        public static byte[] WriteCommand(FinsAddress memoryAddress, Header header, ushort[] data)
         {
             var ms = new BinaryWriter(new MemoryStream());
             header.WriteTo(ms);
             ms.Write(CommandMemoryAreaWrite);
-            ms.Write(memoryArea);
-            ms.Write((byte)(startAddress >> 8));
-            ms.Write((byte)startAddress);
+            ms.Write(memoryAddress.Area);
+            ms.Write((byte)(memoryAddress.Offset >> 8));
+            ms.Write((byte)memoryAddress.Offset);
             ms.Write((byte)0); // Address Bit
             ms.Write((byte)(data.Length >> 8));
             ms.Write((byte)data.Length);
@@ -65,7 +53,7 @@ namespace CableRobot.Fins
 
         private static ushort[] ToShorts(byte[] data)
         {
-            ushort[] r =  new ushort[data.Length / 2];
+            ushort[] r = new ushort[data.Length / 2];
             for (int i = 0; i < r.Length; i++)
             {
                 r[i] = data[i * 2 + 1];
