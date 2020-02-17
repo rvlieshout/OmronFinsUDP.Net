@@ -48,7 +48,7 @@ namespace CableRobot.Fins
         }
 
         /// <summary>
-        /// Syncroniously reads specified number of ushorts starting from specified address in data memory
+        /// Syncroniously reads specified number of ushorts starting from specified address.
         /// </summary>
         /// <param name="startAddress">Address to start to read from</param>
         /// <param name="count">Number of ushorts to read</param>
@@ -61,7 +61,7 @@ namespace CableRobot.Fins
         }
 
         /// <summary>
-        /// Syncroniously writes specified data to specified address of data memory
+        /// Syncroniously writes specified data to specified address.
         /// </summary>
         /// <param name="startAddress">Address to start write to</param>
         /// <param name="data">Data to write</param>
@@ -73,7 +73,7 @@ namespace CableRobot.Fins
         }
 
         /// <summary>
-        /// Asynchronously reads specified number of ushorts starting from specified address in data memory
+        /// Asynchronously reads specified number of ushorts starting from the specified address.
         /// </summary>
         /// <param name="startAddress">Address to start to read from</param>
         /// <param name="count">Number of ushorts to read</param>
@@ -86,7 +86,7 @@ namespace CableRobot.Fins
         }
 
         /// <summary>
-        /// Asynchronously writes specified data to specified address of data memory
+        /// Asynchronously writes specified data to specified memory address.
         /// </summary>
         /// <param name="startAddress">Address to start to write to</param>
         /// <param name="data">Data to write</param>
@@ -99,6 +99,7 @@ namespace CableRobot.Fins
 
         /// <summary>
         /// Writes specified data to specified address of data memory without
+        /// waiting for a response.
         /// </summary>
         /// <param name="startAddress">Address to start to read from</param>
         /// <param name="count">Number of ushorts to read</param>
