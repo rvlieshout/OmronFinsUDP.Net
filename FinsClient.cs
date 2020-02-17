@@ -53,7 +53,7 @@ namespace CableRobot.Fins
         /// <param name="startAddress">Address to start to read from</param>
         /// <param name="count">Number of ushorts to read</param>
         /// <returns>Read data</returns>
-        public ushort[] ReadData(FinsAddress startAddress, ushort count)
+        public ushort[] Read(FinsAddress startAddress, ushort count)
         {
             var sid = IncrementSid();
             var cmd = FinsDriver.ReadCommand(startAddress, new Header(sid, true), count);
@@ -65,7 +65,7 @@ namespace CableRobot.Fins
         /// </summary>
         /// <param name="startAddress">Address to start write to</param>
         /// <param name="data">Data to write</param>
-        public void WriteData(FinsAddress startAddress, ushort[] data)
+        public void Write(FinsAddress startAddress, ushort[] data)
         {
             var sid = IncrementSid();
             var cmd = FinsDriver.WriteCommand(startAddress, new Header(sid, true), data);
